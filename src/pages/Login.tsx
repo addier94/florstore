@@ -50,7 +50,7 @@ const Login = () => {
         <p className="mt-4 text-s-gray2 text-center">
           Aún no tengo una
           <Link
-            to="/register"
+            to="/auth/register"
             className="text-s-gray ml-1 font-semibold hover:opacity-70"
           >
             Cuenta
