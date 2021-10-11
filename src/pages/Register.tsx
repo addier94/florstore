@@ -1,8 +1,21 @@
-import React from "react";
 import { MdSwitchAccount } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useForm } from "../hooks/useForm";
+import { FormSubmit } from "../utils/TypeScript";
 
 const Register = () => {
+  const { values, handleInputChange } = useForm({
+    name: "Alfredo",
+    email: "alfredo@gmail.com",
+    password: "testtest",
+    password_cf: "testtest",
+  });
+  const { name, email, password, password_cf } = values;
+
+  const handleRegister = (e: FormSubmit) => {
+    e.preventDefault();
+    console.log("data ", values);
+  };
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div
@@ -16,12 +29,15 @@ const Register = () => {
           Crear cuenta
         </div>
 
-        <form className="mt-8">
+        <form onSubmit={handleRegister} className="mt-8">
           <div className="py-2">
             <input
               type="text"
               className="w-full border-none outline-none bg-transparent text-s-gray py-3 px-6 shadow-s-input2 focus:shadow-s-input-hover rounded-2xl"
               placeholder="Nombre"
+              name="name"
+              value={name}
+              onChange={handleInputChange}
             />
           </div>
           <div className="py-2">
@@ -29,6 +45,9 @@ const Register = () => {
               type="email"
               className="w-full border-none outline-none bg-transparent text-s-gray py-3 px-6 shadow-s-input2 focus:shadow-s-input-hover rounded-2xl"
               placeholder="Email"
+              name="email"
+              value={email}
+              onChange={handleInputChange}
             />
           </div>
           <div className="pt-3">
@@ -36,13 +55,19 @@ const Register = () => {
               type="password"
               className="w-full border-none outline-none bg-transparent text-s-gray py-3 px-6 shadow-s-input2 focus:shadow-s-input-hover rounded-2xl"
               placeholder="Password"
+              name="password"
+              value={password}
+              onChange={handleInputChange}
             />
           </div>
           <div className="pt-3">
             <input
-              type="cf_password"
+              type="password_cf"
               className="w-full border-none outline-none bg-transparent text-s-gray py-3 px-6 shadow-s-input2 focus:shadow-s-input-hover rounded-2xl"
               placeholder="Confirm password"
+              name="password_cf"
+              value={password_cf}
+              onChange={handleInputChange}
             />
           </div>
           <button

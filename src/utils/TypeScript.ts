@@ -15,23 +15,18 @@ export interface IParams {
 }
 
 export interface IUserLogin {
-  account: string;
+  email: string;
   password: string;
 }
 
 export interface IUserRegister extends IUserLogin {
   name: string;
-  cf_password: string;
+  password_cf: string;
 }
 
 export interface IUser extends IUserLogin {
-  avatar: string;
-  createdAt: string;
-  name: string;
-  role: string;
-  type: string;
-  updatedAt: string;
-  _id: string;
+  email: string;
+  password: string;
 }
 
 export interface IUserProfile extends IUserRegister {

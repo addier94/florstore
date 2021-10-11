@@ -8,11 +8,11 @@ export const AppRouter = () => {
   return (
     <Router>
       <Switch>
-        <PublicRoute path="/auth" component={AuthRouter} isLoggedIn={true} />
+        <PublicRoute path="/auth" component={AuthRouter} isLoggedIn={false} />
         <PrivateRoute
           path="/"
           component={AuthenticatedRoute}
-          isLoggedIn={true}
+          isLoggedIn={false}
         />
 
         <Redirect to="/auth/login" />
