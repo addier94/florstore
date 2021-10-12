@@ -1,20 +1,24 @@
 import { MdSwitchAccount } from "react-icons/md";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useForm } from "../hooks/useForm";
+import { startRegisterWithEmailPasswordName } from "../redux/actions/authAction";
 import { FormSubmit } from "../utils/TypeScript";
 
 const Register = () => {
-  const { values, handleInputChange } = useForm({
-    name: "Alfredo",
-    email: "alfredo@gmail.com",
-    password: "testtest",
-    password_cf: "testtest",
-  });
-  const { name, email, password, password_cf } = values;
+  const dispatch = useDispatch();
+
+  const { values, handleInputChange, name, email, password, cf_password } =
+    useForm({
+      name: "Alfredo",
+      email: "alfredo@gmail.com",
+      password: "testtest",
+      cf_password: "testtest",
+    });
 
   const handleRegister = (e: FormSubmit) => {
     e.preventDefault();
-    console.log("data ", values);
+    dispatch(startRegisterWithEmailPasswordName(values));
   };
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -62,11 +66,11 @@ const Register = () => {
           </div>
           <div className="pt-3">
             <input
-              type="password_cf"
+              type="password"
               className="w-full border-none outline-none bg-transparent text-s-gray py-3 px-6 shadow-s-input2 focus:shadow-s-input-hover rounded-2xl"
               placeholder="Confirm password"
-              name="password_cf"
-              value={password_cf}
+              name="cf_password"
+              value={cf_password}
               onChange={handleInputChange}
             />
           </div>

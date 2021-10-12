@@ -19,7 +19,14 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+
+/* ---------------- Load Tailwind -------------------- */
 /* ./src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* ---------------- Loading Page-------------------- */
+@import url('../components/alert/Loading.css');

@@ -16,5 +16,5 @@ export function useForm<T>(initState: T) {
     });
   };
 
-  return { values, handleInputChange, reset };
+  return { values, handleInputChange, reset, ...values };
 }

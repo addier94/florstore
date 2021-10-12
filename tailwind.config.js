@@ -7,6 +7,7 @@ module.exports = {
         "s-body": "#ecf0f3",
         "s-gray": "#555",
         "s-gray2": "#aaa",
+        "s-transparent": "#0007",
         "s-primary": "#02c8db",
       },
       boxShadow: {
