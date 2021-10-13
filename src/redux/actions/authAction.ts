@@ -29,14 +29,13 @@ export const startRegisterWithEmailPasswordName =
       );
       await updateProfile(user, { displayName: name });
 
-      // if (user.displayName) {
       dispatch({
         type: AUTH,
         payload: { uid: user.uid, name: user.displayName },
       });
-      // }
-    } catch (error: any) {
-      console.log("error", error);
-      dispatch({ type: ALERT, payload: { errors: "Something wrong" } });
+      dispatch({ type: ALERT, payload: { loading: false } });
+    } catch (error) {
+      console.log("error", typeof error);
+      dispatch({ type: ALERT, payload: { errors: "something happened" } });
     }
   };

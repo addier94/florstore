@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 import { useDispatch } from "react-redux";
 import { ALERT } from "../../redux/types/alertType";
 
@@ -14,34 +16,32 @@ const Toast = ({ title, body, bgColor }: IProps) => {
     dispatch({ type: ALERT, payload: {} });
   };
 
-  return (
-    <div
-      className={`toast show position-fixed text-light ${bgColor}`}
-      style={{ top: "5px", right: "5px", zIndex: 50, minWidth: "200px" }}
-    >
-      <div className={`toast-header text-light ${bgColor}`}>
-        <strong className="me-auto">{title}</strong>
-        <button
-          type="button"
-          className="btn-close"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-          onClick={handleClose}
-        />
-      </div>
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
-      <div className="toast-body">
-        {typeof body === "string" ? (
-          body
-        ) : (
-          <ul>
-            {body.map((text, index) => (
-              <li key={index}>{text}</li>
-            ))}
-          </ul>
-        )}
+  Toast.fire({
+    icon: "error",
+    title: "Signed in successfully",
+  });
+
+  return (
+    <>
+      <div>
+        {/* {Swal.fire("Error", title, "error")} */}
+        <p>{title}</p>
+        <p>{body}</p>
+        <p>{bgColor}</p>
       </div>
-    </div>
+    </>
   );
 };
 
