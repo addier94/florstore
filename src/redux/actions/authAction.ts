@@ -34,8 +34,7 @@ export const startRegisterWithEmailPasswordName =
         payload: { uid: user.uid, name: user.displayName },
       });
       dispatch({ type: ALERT, payload: { loading: false } });
-    } catch (error) {
-      console.log("error", typeof error);
-      dispatch({ type: ALERT, payload: { errors: "something happened" } });
+    } catch (error:any) {
+      dispatch({ type: ALERT, payload: { errors: (error.message ?? 'Error al registrar') } });
     }
   };

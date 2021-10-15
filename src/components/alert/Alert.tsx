@@ -11,13 +11,9 @@ export const Alert = () => {
     <div>
       {alert.loading && <Loading />}
 
-      {alert.errors && (
-        <Toast title="Errors" body={alert.errors} bgColor="bg-danger" />
-      )}
+      {alert.errors && <Toast typeIcon="error" body={alert.errors} />}
 
-      {alert.success && (
-        <Toast title="Success" body={alert.success} bgColor="bg-success" />
-      )}
+      {alert.success && <Toast typeIcon="success" body={alert.success} />}
     </div>
   );
 };

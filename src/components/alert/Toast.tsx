@@ -4,12 +4,11 @@ import { useDispatch } from "react-redux";
 import { ALERT } from "../../redux/types/alertType";
 
 interface IProps {
-  title: string;
+  typeIcon: string;
   body: string | string[];
-  bgColor: string;
 }
 
-const Toast = ({ title, body, bgColor }: IProps) => {
+const Toast = ({ typeIcon, body }: IProps) => {
   const dispatch = useDispatch();
 
   const handleClose = () => {
@@ -26,23 +25,23 @@ const Toast = ({ title, body, bgColor }: IProps) => {
       toast.addEventListener("mouseenter", Swal.stopTimer);
       toast.addEventListener("mouseleave", Swal.resumeTimer);
     },
+    didClose: () => {
+      handleClose();
+    },
   });
+  if (typeIcon === "success") {
+    Toast.fire({
+      icon: typeIcon,
+      title: body,
+    });
+  } else if (typeIcon === "error") {
+    Toast.fire({
+      icon: typeIcon,
+      title: body,
+    });
+  }
 
-  Toast.fire({
-    icon: "error",
-    title: "Signed in successfully",
-  });
-
-  return (
-    <>
-      <div>
-        {/* {Swal.fire("Error", title, "error")} */}
-        <p>{title}</p>
-        <p>{body}</p>
-        <p>{bgColor}</p>
-      </div>
-    </>
-  );
+  return <>{JSON.stringify(typeIcon)}</>;
 };
 
 export default Toast;
