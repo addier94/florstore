@@ -2,10 +2,16 @@ import React from "react";
 import { AiOutlineLogout } from "react-icons/ai";
 import { FaRegUserCircle } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
+import { useDispatch } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
+import { startLogout } from "../../redux/actions/authAction";
 
 export const Header = () => {
+  const dispatch = useDispatch();
   const history = useHistory();
+  const handleLogout = () => {
+    dispatch(startLogout());
+  };
   return (
     <>
       <div className="bg-s-body fixed top-0 left-0 w-full">
@@ -49,7 +55,10 @@ export const Header = () => {
               onClick={() => history.push("/perfil")}
               className="mb-3 w-10 h-10 block shadow-s-btn rounded-full cursor-pointer hover:opacity-75"
             />
-            <AiOutlineLogout className="w-8 h-8 text-red-700 block shadow-s-btn rounded-full cursor-pointer hover:opacity-75" />
+            <AiOutlineLogout
+              onClick={handleLogout}
+              className="w-8 h-8 text-red-700 block shadow-s-btn rounded-full cursor-pointer hover:opacity-75"
+            />
           </div>
         </header>
       </div>

@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  signOut,
   updateProfile,
 } from "@firebase/auth";
 import { Dispatch } from "redux";
@@ -28,13 +29,31 @@ export const startRegisterWithEmailPasswordName =
         password
       );
       await updateProfile(user, { displayName: name });
+      dispatch({ type: ALERT, payload: { success: `Hola ${name}` } });
 
       dispatch({
         type: AUTH,
         payload: { uid: user.uid, name: user.displayName },
       });
       dispatch({ type: ALERT, payload: { loading: false } });
-    } catch (error:any) {
-      dispatch({ type: ALERT, payload: { errors: (error.message ?? 'Error al registrar') } });
+    } catch (error: any) {
+      dispatch({
+        type: ALERT,
+        payload: { errors: error.message ?? "Error al registrar" },
+      });
+    }
+  };
+
+export const startLogout =
+  () => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+    try {
+      const auth = getAuth();
+      dispatch({ type: ALERT, payload: { loading: true } });
+      await signOut(auth);
+
+      dispatch({ type: AUTH, payload: {} });
+      dispatch({ type: ALERT, payload: { loading: false } });
+    } catch (error) {
+      console.log(error);
     }
   };
