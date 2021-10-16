@@ -1,4 +1,4 @@
-import { IUserRegister, IBlog } from "./TypeScript";
+import { IUserRegister } from "./TypeScript";
 
 export const validRegister = (userRegister: IUserRegister) => {
   const { name, email, password, cf_password } = userRegister;

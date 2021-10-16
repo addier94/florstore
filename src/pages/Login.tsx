@@ -1,8 +1,22 @@
-import React from "react";
 import { AiOutlineLogin } from "react-icons/ai";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { useForm } from "../hooks/useForm";
+import { startLogin } from "../redux/actions/authAction";
+import { FormSubmit } from "../utils/TypeScript";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const { email, password, values, handleInputChange } = useForm({
+    email: "",
+    password: "",
+  });
+
+  const handleSubmit = (e: FormSubmit) => {
+    e.preventDefault();
+    dispatch(startLogin(values));
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div
@@ -16,12 +30,15 @@ const Login = () => {
           Iniciar sesión
         </div>
 
-        <form className="mt-8">
+        <form onSubmit={handleSubmit} className="mt-8">
           <div className="py-2">
             <input
               type="email"
               className="w-full border-none outline-none bg-transparent text-s-gray py-3 px-6 shadow-s-input2 focus:shadow-s-input-hover rounded-2xl"
               placeholder="email"
+              name="email"
+              value={email}
+              onChange={handleInputChange}
             />
           </div>
           <div className="pt-3">
@@ -29,6 +46,9 @@ const Login = () => {
               type="password"
               className="w-full border-none outline-none bg-transparent text-s-gray py-3 px-6 shadow-s-input2 focus:shadow-s-input-hover rounded-2xl"
               placeholder="password"
+              name="password"
+              value={password}
+              onChange={handleInputChange}
             />
           </div>
           <button
