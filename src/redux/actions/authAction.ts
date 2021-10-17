@@ -6,9 +6,10 @@ import {
   updateProfile,
 } from "@firebase/auth";
 import { Dispatch } from "redux";
+import { loadingOrAlert } from "../../helpers/Alert";
 import { IUserLogin, IUserRegister } from "../../utils/TypeScript";
 import { validRegister } from "../../utils/Valid";
-import { ALERT, IAlertType } from "../types/alertType";
+import { IAlertType } from "../types/alertType";
 import { AUTH, IAuthType } from "../types/authType";
 
 export const startRegisterWithEmailPasswordName =
@@ -17,31 +18,27 @@ export const startRegisterWithEmailPasswordName =
     const check = validRegister(userRegister);
 
     if (check.errLength > 0) {
-      return dispatch({ type: ALERT, payload: { errors: check.errMsg } });
+      return dispatch(loadingOrAlert("errors", check.errMsg));
     }
 
     try {
-      dispatch({ type: ALERT, payload: { loading: true } });
       const auth = getAuth();
-      const { name, email, password } = userRegister;
+      dispatch(loadingOrAlert("loading", true));
+
       const { user } = await createUserWithEmailAndPassword(
         auth,
-        email,
-        password
+        userRegister.email,
+        userRegister.password
       );
-      await updateProfile(user, { displayName: name });
-      dispatch({ type: ALERT, payload: { success: `Hola ${name}` } });
+      dispatch(loadingOrAlert("success", `Hola ${userRegister.name}`));
+      await updateProfile(user, { displayName: userRegister.name });
 
-      dispatch({
-        type: AUTH,
-        payload: { uid: user.uid, name: user.displayName, email: user.email },
-      });
-      dispatch({ type: ALERT, payload: { loading: false } });
+      const { uid, displayName: name, email } = user;
+      dispatch(login(uid, name, email));
+
+      dispatch(loadingOrAlert("loading", false));
     } catch (error: any) {
-      dispatch({
-        type: ALERT,
-        payload: { errors: error.message ?? "Error al registrar" },
-      });
+      dispatch(loadingOrAlert("errors", "Error al realizar el registro"));
     }
   };
 
@@ -49,16 +46,14 @@ export const startLogout =
   () => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
     try {
       const auth = getAuth();
-      // dispatch({ type: ALERT, payload: { loading: true } });
-      await signOut(auth);
+      dispatch(loadingOrAlert("loading", true));
 
+      await signOut(auth);
       dispatch({ type: AUTH, payload: {} });
-      // dispatch({ type: ALERT, payload: { loading: false } });
+
+      dispatch(loadingOrAlert("loading", false));
     } catch (error: any) {
-      dispatch({
-        type: ALERT,
-        payload: { errors: error.message ?? "Error al cerrar su cuenta" },
-      });
+      dispatch(loadingOrAlert("errors", "Error Su cuenta no se ha cerrado"));
     }
   };
 
@@ -67,21 +62,29 @@ export const startLogin =
   async (dispatch: Dispatch<IAuthType | IAlertType>) => {
     try {
       const auth = getAuth();
-      dispatch({ type: ALERT, payload: { loading: true } });
+      dispatch(loadingOrAlert("loading", true));
 
-      const { email, password } = userLogin;
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const { user: userAuth } = await signInWithEmailAndPassword(
+        auth,
+        userLogin.email,
+        userLogin.password
+      );
 
-      dispatch({
-        type: AUTH,
-        payload: { uid: user.uid, name: user.email, email: user.email },
-      });
+      const { uid, displayName: name, email } = userAuth;
+      dispatch(login(uid, name, email));
 
-      dispatch({ type: ALERT, payload: { loading: false } });
+      dispatch(loadingOrAlert("loading", false));
+      dispatch(loadingOrAlert("success", `Hola ${name}`));
     } catch (error: any) {
-      dispatch({
-        type: ALERT,
-        payload: { errors: error.message ?? "Email o Contraseña incorrecto" },
-      });
+      dispatch(loadingOrAlert("errors", "Email o Password incorrecto"));
     }
   };
+
+type uid = string | null;
+type name = string | null;
+type email = string | null;
+
+export const login = (uid: uid, name: name, email: email): IAuthType => ({
+  type: AUTH,
+  payload: { uid, name, email },
+});

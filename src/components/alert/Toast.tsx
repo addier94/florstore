@@ -41,7 +41,7 @@ const Toast = ({ typeIcon, body }: IProps) => {
     });
   }
 
-  return <>{JSON.stringify(typeIcon)}</>;
+  return <></>;
 };
 
 export default Toast;
