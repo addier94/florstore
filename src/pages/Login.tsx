@@ -2,7 +2,7 @@ import { AiOutlineLogin } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useForm } from "../hooks/useForm";
-import { startLogin } from "../redux/actions/authAction";
+import { startGoogleLogin, startLogin } from "../redux/actions/authAction";
 import { FormSubmit } from "../utils/TypeScript";
 
 const Login = () => {
@@ -15,6 +15,10 @@ const Login = () => {
   const handleSubmit = (e: FormSubmit) => {
     e.preventDefault();
     dispatch(startLogin(values));
+  };
+
+  const handleGoogleLogin = () => {
+    dispatch(startGoogleLogin());
   };
 
   return (
@@ -58,7 +62,10 @@ const Login = () => {
             Login
           </button>
         </form>
-        <div className="shadow-s-btn hover:opacity-70 rounded-3xl mt-4 flex justify-center py-3 cursor-pointer">
+        <div
+          onClick={handleGoogleLogin}
+          className="shadow-s-btn hover:opacity-70 rounded-3xl mt-4 flex justify-center py-3 cursor-pointer"
+        >
           <div>
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"

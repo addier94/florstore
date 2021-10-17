@@ -1,7 +1,9 @@
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updateProfile,
 } from "@firebase/auth";
@@ -77,6 +79,22 @@ export const startLogin =
       dispatch(loadingOrAlert("success", `Hola ${name}`));
     } catch (error: any) {
       dispatch(loadingOrAlert("errors", "Email o Password incorrecto"));
+    }
+  };
+
+export const startGoogleLogin =
+  () => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+    try {
+      const auth = getAuth();
+      dispatch(loadingOrAlert("loading", true));
+      const { user } = await signInWithPopup(auth, new GoogleAuthProvider());
+      const { uid, displayName: name, email } = user;
+      dispatch(login(uid, name, email));
+
+      dispatch(loadingOrAlert("loading", false));
+      dispatch(loadingOrAlert("success", `Hola ${name}`));
+    } catch (error: any) {
+      dispatch(loadingOrAlert("errors", error.message ?? "Error 500"));
     }
   };
 
