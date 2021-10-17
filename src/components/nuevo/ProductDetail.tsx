@@ -1,14 +1,19 @@
-import React from "react";
 import { VscAdd } from "react-icons/vsc";
 import { BsBox } from "react-icons/bs";
 import { GrCodeSandbox } from "react-icons/gr";
 import { GiCash } from "react-icons/gi";
+import { useDispatch } from "react-redux";
+import { handleModal } from "../../redux/actions/uiModalAction";
 
 export const ProductDetail = () => {
+  const dispach = useDispatch();
   return (
     <form className="flex justify-center">
       <div className="mx-2 w-24">
-        <VscAdd className="h-10 w-full p-0 mb-2 shadow-s-btn rounded-xl cursor-pointer" />
+        <VscAdd
+          onClick={() => dispach(handleModal(true))}
+          className="h-10 w-full p-0 mb-2 shadow-s-btn rounded-xl cursor-pointer"
+        />
         <input
           type="text"
           placeholder="Seleccionar"

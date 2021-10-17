@@ -39,6 +39,10 @@ export interface IAlert {
   errors?: string | string[];
 }
 
+export interface IModal {
+  show: boolean;
+}
+
 export interface ICategory {
   _id: string;
   name: string;
