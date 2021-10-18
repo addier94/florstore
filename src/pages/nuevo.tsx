@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
+import { MainModal } from "../components/MainModal";
+
 import { ProductDetail } from "../components/nuevo/ProductDetail";
-import { ProductModal } from "../components/nuevo/ProductModal";
+
 import { RootStore } from "../utils/TypeScript";
 
 const Nuevo = () => {
@@ -9,7 +11,7 @@ const Nuevo = () => {
   return (
     <>
       <ProductDetail />
-      {show && <ProductModal />}
+      {show && <MainModal />}
     </>
   );
 };
