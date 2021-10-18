@@ -6,11 +6,13 @@ export const PublicRoute = ({
   component: Component,
   ...rest
 }: IProsRoute) => {
+  const path = localStorage.getItem("lastPath") || "/";
+
   return (
     <Route
       {...rest}
       component={(props: any) =>
-        isLoggedIn ? <Redirect to="/" /> : <Component {...props} />
+        isLoggedIn ? <Redirect to={path} /> : <Component {...props} />
       }
     />
   );

@@ -74,7 +74,7 @@ export interface IComment {
 }
 
 export interface IProsRoute {
-  path: string;
+  [x: string]: any;
   component: () => JSX.Element;
   isLoggedIn: boolean;
 }

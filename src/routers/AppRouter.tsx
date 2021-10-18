@@ -2,8 +2,8 @@ import { getAuth, onAuthStateChanged } from "@firebase/auth";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
+import { loadingOrAlert } from "../helpers/Alert";
 import { login } from "../redux/actions/authAction";
-import { ALERT } from "../redux/types/alertType";
 import app from "../services/firebase-config";
 import { AuthenticatedRoute } from "./AuthenticatedRoute";
 import { AuthRouter } from "./AuthRouter";
@@ -16,7 +16,7 @@ export const AppRouter = () => {
 
   useEffect(() => {
     const auth = getAuth(app);
-    dispatch({ type: ALERT, payload: { loading: true } });
+    dispatch(loadingOrAlert("loading", true));
 
     onAuthStateChanged(auth, async (user) => {
       if (user?.uid) {
@@ -25,7 +25,7 @@ export const AppRouter = () => {
       } else {
         setIsLoggedIn(false);
       }
-      dispatch({ type: ALERT, payload: { loading: false } });
+      dispatch(loadingOrAlert("loading", false));
     });
   }, [dispatch, setIsLoggedIn]);
   return (
