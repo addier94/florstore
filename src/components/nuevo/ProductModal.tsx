@@ -12,11 +12,11 @@ export const ProductModal = () => {
 
   return (
     <div className="absolute left-0 top-0 min-h-screen w-full z-50 flex items-center justify-center bg-s-transparent">
-      <div className="bg-s-body w-96 h-96 rounded-2xl p-5 my-10">
-        <VscChromeClose
-          onClick={() => dispatch(handleModal(false))}
-          className="w-10 h-10 cursor-pointer absolute right-0 top-0 z-50 text-white"
-        />
+      <VscChromeClose
+        onClick={() => dispatch(handleModal(false))}
+        className="w-10 h-10 cursor-pointer absolute right-0 top-0 z-50 text-white"
+      />
+      <div className="bg-s-body w-96 h-96 rounded-2xl p-5 my-10 animate__animated animate__fadeIn animate__faster">
         <form onSubmit={handleSubmit} className="mb-4 flex justify-between">
           <div>
             <input
