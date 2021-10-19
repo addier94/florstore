@@ -1,9 +1,10 @@
 export const CREATE_PRODUCTS_USER_ID = "CREATE_PRODUCTS_USER_ID";
 
 export interface IProductsUser {
+  uid: string;
   userID: string;
   name: string;
-  createdAt: Date;
+  createdAt: number;
 }
 
 export interface IProductsUserType {

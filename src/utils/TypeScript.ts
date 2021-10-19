@@ -7,7 +7,10 @@ export type InputChange = ChangeEvent<
 
 export type FormSubmit = FormEvent<HTMLFormElement>;
 
+export type RooState = () => ReturnType<typeof rootReducer>;
 export type RootStore = ReturnType<typeof rootReducer>;
+
+//  --------------------------------
 
 export interface IParams {
   page: string;

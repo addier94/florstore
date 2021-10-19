@@ -1,6 +1,18 @@
+import { useDispatch } from "react-redux";
+import { useForm } from "../../../hooks/useForm";
+import { startCreateProduct } from "../../../redux/actions/productsUserAction";
+import { FormSubmit } from "../../../utils/TypeScript";
+
 export const AddProduct = () => {
+  const { name, handleInputChange } = useForm({ name: "" });
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e: FormSubmit) => {
+    e.preventDefault();
+    dispatch(startCreateProduct(name));
+  };
   return (
-    <form className="mb-4 flex justify-between">
+    <form onSubmit={handleSubmit} className="mb-4 flex justify-between">
       <div>
         <input
           placeholder="Nombro para el producto"
@@ -8,6 +20,8 @@ export const AddProduct = () => {
           autoComplete="off"
           autoFocus
           name="name"
+          value={name}
+          onChange={handleInputChange}
         />
         {/* {newProduct.name.length > 0 && (
           <VscChromeClose className="absolute right-4 top-3 w-5 h-5 cursor-pointer" />

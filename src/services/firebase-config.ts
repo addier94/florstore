@@ -19,6 +19,7 @@
 // export { db, googleAuthProvider };
 
 import { FirebaseApp, getApps, getApp, initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 let app: FirebaseApp;
 
@@ -37,4 +38,5 @@ if (getApps().length) {
   app = initializeApp(firebaseConfig);
 }
 
+export const db = getFirestore();
 export default app;

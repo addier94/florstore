@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import { loadingOrAlert } from "../helpers/Alert";
 import { login } from "../redux/actions/authAction";
+import { startGetProducts } from "../redux/actions/productsUserAction";
 import app from "../services/firebase-config";
 import { AuthenticatedRoute } from "./AuthenticatedRoute";
 import { AuthRouter } from "./AuthRouter";
@@ -22,6 +23,7 @@ export const AppRouter = () => {
       if (user?.uid) {
         dispatch(login(user.uid, user.displayName, user.email));
         setIsLoggedIn(true);
+        dispatch(startGetProducts(user.uid));
       } else {
         setIsLoggedIn(false);
       }

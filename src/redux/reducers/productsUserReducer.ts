@@ -10,7 +10,7 @@ const productsUserReducer = (
 ): IProductsUser[] => {
   switch (action.type) {
     case CREATE_PRODUCTS_USER_ID:
-      return state;
+      return [...state, action.payload];
     default:
       return state;
   }
