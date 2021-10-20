@@ -4,12 +4,12 @@ import { startCreateProduct } from "../../../redux/actions/productsUserAction";
 import { FormSubmit } from "../../../utils/TypeScript";
 
 export const AddProduct = () => {
-  const { name, handleInputChange } = useForm({ name: "" });
+  const { name, handleInputChange, reset } = useForm({ name: "" });
   const dispatch = useDispatch();
 
   const handleSubmit = (e: FormSubmit) => {
     e.preventDefault();
-    dispatch(startCreateProduct(name));
+    dispatch(startCreateProduct(name, reset));
   };
   return (
     <form onSubmit={handleSubmit} className="mb-4 flex justify-between">

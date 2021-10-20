@@ -1,12 +1,11 @@
 import { collection, getDocs, query } from "@firebase/firestore";
 import { db } from "../services/firebase-config";
 
-export const getAllOwnProducts = async (userID: string): Promise<{}[]> => {
-  const productsSnap = await getDocs(
-    query(collection(db, `/${userID}/user/products`))
-  );
+export const getAllOwnProducts = async (userName: string, userID: string) => {
+  const q = query(collection(db, `/${userName}/product/${userID}`));
+  const productsSnap = await getDocs(q);
 
-  const products: Array<object> = [];
+  const products: any = [];
 
   productsSnap.forEach((product) => {
     products.push({

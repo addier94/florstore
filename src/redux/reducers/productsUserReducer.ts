@@ -1,15 +1,19 @@
 import {
-  CREATE_PRODUCTS_USER_ID,
-  IProductsUser,
+  CREATE_PRODUCT,
+  GET_ALL_OWN_PRODUCTS,
+  IProducts,
   IProductsUserType,
 } from "../types/productsUserType";
 
 const productsUserReducer = (
-  state: IProductsUser[] = [],
+  state: IProducts[] = [],
   action: IProductsUserType
-): IProductsUser[] => {
+): IProducts[] => {
   switch (action.type) {
-    case CREATE_PRODUCTS_USER_ID:
+    case GET_ALL_OWN_PRODUCTS:
+      return action.payload;
+
+    case CREATE_PRODUCT:
       return [...state, action.payload];
     default:
       return state;

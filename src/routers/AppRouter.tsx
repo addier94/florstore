@@ -23,7 +23,7 @@ export const AppRouter = () => {
       if (user?.uid) {
         dispatch(login(user.uid, user.displayName, user.email));
         setIsLoggedIn(true);
-        dispatch(startGetProducts(user.uid));
+        dispatch(startGetProducts(user.displayName || "/user", user.uid));
       } else {
         setIsLoggedIn(false);
       }

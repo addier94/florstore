@@ -8,7 +8,7 @@ export const MainModal = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className="absolute left-0 top-0 min-h-screen w-full z-50 flex items-center justify-center bg-s-transparent">
+    <div className="absolute left-0 top-0 min-h-screen w-full z-40 flex items-center justify-center bg-s-transparent">
       <VscChromeClose
         onClick={() => dispatch(handleModal(false))}
         className="w-10 h-10 cursor-pointer absolute right-0 top-0 z-50 text-white"

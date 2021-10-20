@@ -2,51 +2,55 @@ import { Dispatch } from "react";
 import { loadingOrAlert } from "../../helpers/Alert";
 import { IAlertType } from "../types/alertType";
 import {
-  CREATE_PRODUCTS_USER_ID,
-  IProductsUser,
-  IProductsUserType,
+  CREATE_PRODUCT,
+  GET_ALL_OWN_PRODUCTS,
+  ICreateProductType,
+  IGetAllProductType,
+  IProducts,
 } from "../types/productsUserType";
 import { addDoc, collection } from "@firebase/firestore";
 import { db } from "../../services/firebase-config";
 import { RooState } from "../../utils/TypeScript";
 import { validProduct } from "../../utils/Valid";
 import { getAllOwnProducts } from "../../helpers/getAllOwnProducts";
+import { slugify } from "../../helpers/Slugify";
 
 export const startGetProducts =
-  (userID: string) =>
-  async (dispatch: Dispatch<IAlertType | IProductsUserType>) => {
+  (userName: string, userID: string) =>
+  async (dispatch: Dispatch<IAlertType | IGetAllProductType>) => {
     try {
-      dispatch(loadingOrAlert("loading", true));
+      // Get all products on firestore []
+      const products = await getAllOwnProducts(slugify(userName), userID);
 
-      const products = await getAllOwnProducts(userID);
-
-      console.log("products", products);
-
-      dispatch(loadingOrAlert("loading", false));
+      dispatch({ type: GET_ALL_OWN_PRODUCTS, payload: products });
     } catch (error) {
       dispatch(loadingOrAlert("errors", "Error al obtener productos"));
     }
   };
 
 export const startCreateProduct =
-  (name: string) =>
+  (name: string, reset: () => void) =>
   async (
-    dispatch: Dispatch<IAlertType | IProductsUserType>,
+    dispatch: Dispatch<IAlertType | ICreateProductType>,
     state: RooState
   ) => {
     const userID = state().auth.uid || "";
+    const userName = state().auth.name || "";
+
+    // Make userID, userName exist and format properly
     const check = validProduct(userID, name);
 
     if (check.errLength) {
       return dispatch(loadingOrAlert("errors", check.errMsg));
     }
+
     try {
       dispatch(loadingOrAlert("loading", true));
 
       const newProduct: any = { userID, name, createdAt: Date.now() };
 
       const { id } = await addDoc(
-        collection(db, `/${userID}/user/products`),
+        collection(db, `/${slugify(userName)}/product/${userID}`),
         newProduct
       );
 
@@ -54,13 +58,14 @@ export const startCreateProduct =
       dispatch(addProduct(newProduct));
 
       dispatch(loadingOrAlert("loading", false));
+      reset();
       dispatch(loadingOrAlert("success", "Producto Creado"));
     } catch (err: any) {
       dispatch(loadingOrAlert("errors", "Error al crear el producto"));
     }
   };
 
-export const addProduct = (product: IProductsUser): IProductsUserType => ({
-  type: CREATE_PRODUCTS_USER_ID,
+export const addProduct = (product: IProducts): ICreateProductType => ({
+  type: CREATE_PRODUCT,
   payload: product,
 });

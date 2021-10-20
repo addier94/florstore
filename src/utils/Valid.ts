@@ -1,4 +1,3 @@
-import { IProductsUser } from "../redux/types/productsUserType";
 import { IUserRegister } from "./TypeScript";
 
 export const validRegister = (userRegister: IUserRegister) => {
