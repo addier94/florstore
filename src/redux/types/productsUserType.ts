@@ -2,7 +2,7 @@ export const CREATE_PRODUCT = "CREATE_PRODUCT";
 export const GET_ALL_OWN_PRODUCTS = "GET_ALL_OWN_PRODUCTS";
 
 export interface IProducts {
-  uid: string;
+  uid?: string;
   userID: string;
   name: string;
   createdAt: number;

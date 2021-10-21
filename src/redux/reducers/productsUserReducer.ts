@@ -11,10 +11,9 @@ const productsUserReducer = (
 ): IProducts[] => {
   switch (action.type) {
     case GET_ALL_OWN_PRODUCTS:
-      return action.payload;
-
+      return action.payload.sort((a, b) => b.createdAt - a.createdAt);
     case CREATE_PRODUCT:
-      return [...state, action.payload];
+      return [action.payload, ...state];
     default:
       return state;
   }

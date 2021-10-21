@@ -1,12 +1,6 @@
 import { collection, CollectionReference, getDocs } from "@firebase/firestore";
-import { IGetAllProduct } from "../redux/types/productsUserType";
+import { IGetAllProduct, IProducts } from "../redux/types/productsUserType";
 import { db } from "../services/firebase-config";
-
-export interface IProducts {
-  userID: string;
-  name: string;
-  createdAt: number;
-}
 
 export const getAllOwnProducts = async (
   userName: string,

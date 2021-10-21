@@ -1,6 +1,6 @@
 export const slugify = (slug: string): string => {
   return slug
-    .toString()
+    ?.toString()
     .trim()
     .toLowerCase()
     .replace(/\s+/g, "-")

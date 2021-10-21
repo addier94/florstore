@@ -37,17 +37,15 @@ export const startCreateProduct =
     const userID = state().auth.uid || "";
     const userName = state().auth.name || "";
 
-    // Make userID, userName exist and format properly
-    const check = validProduct(userID, name);
-
-    if (check.errLength) {
+    // Validate if the format is correct and that name product does not exist in Firestore
+    const check = validProduct(userID, name, state().productsUser);
+    if (check.errLength)
       return dispatch(loadingOrAlert("errors", check.errMsg));
-    }
 
     try {
       dispatch(loadingOrAlert("loading", true));
 
-      const newProduct: any = { userID, name, createdAt: Date.now() };
+      const newProduct: IProducts = { userID, name, createdAt: Date.now() };
 
       const { id } = await addDoc(
         collection(db, `/${slugify(userName)}/product/${userID}`),

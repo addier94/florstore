@@ -1,3 +1,5 @@
+import { slugify } from "../helpers/Slugify";
+import { IGetAllProduct, IProducts } from "../redux/types/productsUserType";
 import { IUserRegister } from "./TypeScript";
 
 export const validRegister = (userRegister: IUserRegister) => {
@@ -39,19 +41,33 @@ export function validateEmail(email: string) {
   return re.test(String(email).toLowerCase());
 }
 
-// Validate product
-export const validProduct = (userID: string, name: string) => {
+// Product Validation
+export const validProduct = (
+  userID: string,
+  name: string,
+  products: IGetAllProduct
+) => {
   const errors: string[] = [];
 
   if (!name) {
     errors.push("Añade un nombre para el producto");
   } else if (name.length <= 3) {
-    errors.push(`${name.strike()} debe ser mayor a 3 caracteres`);
+    errors.push(`${name.toUpperCase().strike()} debe ser mayor a 3 caracteres`);
   } else if (name.length >= 30) {
-    errors.push(`${name.strike()} no debe ser mayor a 30 caracteres`);
+    errors.push(
+      `${name.toUpperCase().strike()} no debe ser mayor a 30 caracteres`
+    );
   }
   if (!userID) {
     errors.push("Error interno (no se pudo obtener userID)");
   }
+
+  const exist: IProducts | undefined = products.find(
+    (item) => slugify(item.name) === slugify(name)
+  );
+  if (exist) {
+    errors.push(`${name.toUpperCase().strike()} ya tienes registrado`);
+  }
+
   return { errMsg: errors, errLength: errors.length };
 };
