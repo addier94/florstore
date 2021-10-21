@@ -12,6 +12,8 @@ export interface ICreateProductType {
   payload: IProducts;
 }
 
+export type IGetAllProduct = Array<IProducts>;
+
 export interface IGetAllProductType {
   type: typeof GET_ALL_OWN_PRODUCTS;
   payload: IProducts[];
