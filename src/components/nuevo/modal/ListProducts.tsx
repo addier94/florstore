@@ -3,7 +3,13 @@ import { RootStore } from "../../../utils/TypeScript";
 import Moment from "react-moment";
 
 export const ListProducts = () => {
-  const products = useSelector((state: RootStore) => state.productsUser);
+  const products = useSelector(({productsUser}: RootStore ) => {
+    if ( productsUser.searchByName.length > 0 ){
+      return productsUser.searchByName
+    } else {
+      return productsUser.productList
+    }
+  });
 
   const descIndex = (products: number, index: number): number => {
     return products - index;
@@ -12,7 +18,7 @@ export const ListProducts = () => {
   return (
     <div className="w-full h-72 overflow-y-scroll">
       {products &&
-        products.map((item, index) => (
+        products.map((item:any, index:any) => (
           <div key={item.uid}>
             <div>
               <span>{descIndex(products.length, index)}</span>

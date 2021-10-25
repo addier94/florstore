@@ -2,11 +2,11 @@ import { Dispatch } from "react";
 import { loadingOrAlert } from "../../helpers/Alert";
 import { IAlertType } from "../types/alertType";
 import {
-  CREATE_PRODUCT,
-  GET_ALL_OWN_PRODUCTS,
+  ADD_PRODUCT,
   ICreateProductType,
   IGetAllProductType,
   IProducts,
+  SET_LIST_PRODUCTS,
 } from "../types/productsUserType";
 import { addDoc, collection } from "@firebase/firestore";
 import { db } from "../../services/firebase-config";
@@ -22,7 +22,7 @@ export const startGetProducts =
       // Get all products on firestore []
       const products = await getAllOwnProducts(slugify(userName), userID);
 
-      dispatch({ type: GET_ALL_OWN_PRODUCTS, payload: products });
+      dispatch({ type: SET_LIST_PRODUCTS, payload: products });
     } catch (error) {
       dispatch(loadingOrAlert("errors", "Error al obtener productos"));
     }
@@ -38,7 +38,7 @@ export const startCreateProduct =
     const userName = state().auth.name || "";
 
     // Validate if the format is correct and that name product does not exist in Firestore
-    const check = validProduct(userID, name, state().productsUser);
+    const check = validProduct(userID, name, state().productsUser.productList);
     if (check.errLength)
       return dispatch(loadingOrAlert("errors", check.errMsg));
 
@@ -64,6 +64,6 @@ export const startCreateProduct =
   };
 
 export const addProduct = (product: IProducts): ICreateProductType => ({
-  type: CREATE_PRODUCT,
+  type: ADD_PRODUCT,
   payload: product,
 });
