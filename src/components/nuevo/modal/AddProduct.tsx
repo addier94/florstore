@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useForm } from "../../../hooks/useForm";
 import { startCreateProduct } from "../../../redux/actions/productsUserAction";
 import { SET_SEARCH_PRODUCTS } from "../../../redux/types/productsUserType";
@@ -13,11 +13,10 @@ export const AddProduct = () => {
     e.preventDefault();
     dispatch(startCreateProduct(name, reset));
   };
-
   useEffect(() => {
     dispatch({ type: SET_SEARCH_PRODUCTS, payload: { name } });
   }, [dispatch, name]);
-  
+
   return (
     <form onSubmit={handleSubmit} className="mb-4 flex justify-between">
       <div>

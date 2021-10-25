@@ -7,39 +7,38 @@ import {
   SET_SEARCH_PRODUCTS,
 } from "../types/productsUserType";
 
- 
-
 const initState: productFormat = {
   productList: [],
   searchByName: [],
-} 
+};
 
 const productsUserReducer = (
   state: productFormat = initState,
   action: IProductsUserType
 ): productFormat => {
-
   switch (action.type) {
     case SET_LIST_PRODUCTS:
-      return {...state, productList: orderByDate(action.payload)};
+      return { ...state, productList: orderByDate(action.payload) };
 
     case ADD_PRODUCT:
-      return {...state, productList: [action.payload, ...state.productList]};
+      return { ...state, productList: [action.payload, ...state.productList] };
 
-      case SET_SEARCH_PRODUCTS:
-      
-      let data: IProducts[]
-
+    case SET_SEARCH_PRODUCTS:
       if (action.payload.name) {
-         data = state.productList.filter((item) =>
+        let searchMatches: IProducts[] = state.productList.filter((item) =>
           item.name.toLowerCase().includes(action.payload.name.toLowerCase())
-        )
-        return {...state, searchByName: [...data]};
-      } else {
-        data = state.productList
+        );
+        if (searchMatches.length === 0) {
+          searchMatches.push(itemNotRegistered(action.payload.name));
+        }
+        return { ...state, searchByName: searchMatches };
       }
 
-      return {...state, productList: [...data], searchByName: []};
+      return {
+        ...state,
+        productList: state.productList,
+        searchByName: [],
+      };
     default:
       return state;
   }
@@ -47,6 +46,15 @@ const productsUserReducer = (
 
 export default productsUserReducer;
 
-const orderByDate = (productList: IProducts[]):IProducts[] => {
+const orderByDate = (productList: IProducts[]): IProducts[] => {
   return productList.sort((a, b) => b.createdAt - a.createdAt);
+};
+
+const itemNotRegistered = (name: string) => {
+  return {
+    uid: "87",
+    name: `${name} aun no esta registrado`,
+    createdAt: 832948493955,
+    userID: "02095938095485",
+  };
 };

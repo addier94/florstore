@@ -1,27 +1,35 @@
 import { useSelector } from "react-redux";
 import { RootStore } from "../../../utils/TypeScript";
 import Moment from "react-moment";
+import { useCallback } from "react";
+import { productFormat } from "../../../redux/types/productsUserType";
 
 export const ListProducts = () => {
-  const products = useSelector(({productsUser}: RootStore ) => {
-    if ( productsUser.searchByName.length > 0 ){
-      return productsUser.searchByName
-    } else {
-      return productsUser.productList
-    }
-  });
+  const state = useSelector((state: RootStore) => state.productsUser);
 
-  const descIndex = (products: number, index: number): number => {
-    return products - index;
-  };
+  const products = useCallback(
+    ({ searchByName, productList }: productFormat) => {
+      return searchByName.length > 0 ? searchByName : productList;
+    },
+    []
+  );
+
+  const descIndex = useCallback(
+    (index: number) => {
+      const itemLength =
+        state.searchByName.length > 0 ? state.searchByName : state.productList;
+      return itemLength.length - index;
+    },
+    [state]
+  );
 
   return (
     <div className="w-full h-72 overflow-y-scroll">
       {products &&
-        products.map((item:any, index:any) => (
+        products(state).map((item, index) => (
           <div key={item.uid}>
             <div>
-              <span>{descIndex(products.length, index)}</span>
+              <span>{descIndex(index)}</span>
               {item.name}
               <Moment className="text-gray-400 ml-2" fromNow>
                 {item.createdAt}
