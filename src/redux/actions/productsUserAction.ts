@@ -4,11 +4,13 @@ import { IAlertType } from "../types/alertType";
 import {
   ADD_PRODUCT,
   ICreateProductType,
+  IDeleteProductType,
   IGetAllProductType,
   IProducts,
+  SET_DELETE_PRODUCT,
   SET_LIST_PRODUCTS,
 } from "../types/productsUserType";
-import { addDoc, collection } from "@firebase/firestore";
+import { addDoc, collection, deleteDoc, doc } from "@firebase/firestore";
 import { db } from "../../services/firebase-config";
 import { RooState } from "../../utils/TypeScript";
 import { validProduct } from "../../utils/Valid";
@@ -60,6 +62,32 @@ export const startCreateProduct =
       dispatch(loadingOrAlert("success", "Producto Creado"));
     } catch (err: any) {
       dispatch(loadingOrAlert("errors", "Error al crear el producto"));
+    }
+  };
+
+export const startDelitingProduct =
+  (product: IProducts) =>
+  async (
+    dispatch: Dispatch<IAlertType | IDeleteProductType>,
+    state: RooState
+  ) => {
+    const userId = state().auth.uid || "";
+    const userName = state().auth.name || "";
+
+    const url = `${slugify(userName)}/product/${userId}/${product.uid}`;
+
+    try {
+      dispatch(loadingOrAlert("loading", true));
+
+      const productRef = doc(db, url);
+      await deleteDoc(productRef);
+
+      dispatch({ type: SET_DELETE_PRODUCT, payload: product.uid || "" });
+
+      dispatch(loadingOrAlert("success", `${product.name} Eliminado`));
+      dispatch(loadingOrAlert("loading", false));
+    } catch (error) {
+      dispatch(loadingOrAlert("errors", `Error el eliminar ${product.name}`));
     }
   };
 

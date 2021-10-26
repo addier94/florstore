@@ -3,6 +3,7 @@ import {
   IProducts,
   IProductsUserType,
   productFormat,
+  SET_DELETE_PRODUCT,
   SET_LIST_PRODUCTS,
   SET_SEARCH_PRODUCTS,
 } from "../types/productsUserType";
@@ -39,6 +40,12 @@ const productsUserReducer = (
         productList: state.productList,
         searchByName: [],
       };
+
+    case SET_DELETE_PRODUCT:
+      return {
+        ...state,
+        productList: deleteProduct(state.productList, action.payload),
+      };
     default:
       return state;
   }
@@ -57,4 +64,8 @@ const itemNotRegistered = (name: string) => {
     createdAt: 832948493955,
     userID: "02095938095485",
   };
+};
+
+const deleteProduct = (products: IProducts[], userId: string) => {
+  return products.filter((item) => item.uid !== userId);
 };
