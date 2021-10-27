@@ -8,9 +8,12 @@ import {
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { AiFillEdit } from "react-icons/ai";
 import { startDelitingProduct } from "../../../redux/actions/productsUserAction";
+import { DeleteProduct } from "./DeleteProduct";
+import { useState } from "react";
 
 export const ListProducts = () => {
   const dispatch = useDispatch();
+  const [selectId, setSelectId] = useState<string | undefined>(undefined);
   const state = useSelector((state: RootStore) => state.productsUser);
 
   const products = ({ searchByName, productList }: productFormat) => {
@@ -23,33 +26,50 @@ export const ListProducts = () => {
     return itemLength.length - index;
   };
 
-  const deleteProduct = (item: IProducts) => {
+  const handleDelete = (item: IProducts) => {
     dispatch(startDelitingProduct(item));
   };
 
   return (
     <div className="w-full h-72 overflow-y-scroll">
       {products &&
-        products(state).map((item, index) => (
+        products(state).map((item: IProducts, index) => (
           <div key={item.uid} className="flex justify-between mb-2">
-            <div>
-              <span className="bg-s-primary text-white p-1 rounded-md mr-1">
+            <div className="flex items-center">
+              <span className="bg-s-primary text-white px-1 rounded-md mr-1">
                 {descIndex(index)}
               </span>
-              {item.name}
-              <Moment className="text-gray-400 ml-2" fromNow>
+              {!isEdit(selectId, item.uid) && (
+                <span className="flex items-center">
+                  {item.name}
+                  <AiFillEdit
+                    onClick={() => setSelectId(item.uid)}
+                    className="ml-1 text-green-700 cursor-pointer"
+                  />
+                </span>
+              )}
+              {isEdit(selectId, item.uid) && (
+                <DeleteProduct product={item} setSelectId={setSelectId} />
+              )}
+              {/* <Moment className="text-gray-400 ml-2" fromNow>
                 {item.createdAt}
-              </Moment>
+              </Moment> */}
             </div>
-            <div className="flex">
-              <RiDeleteBin7Fill
-                onClick={() => deleteProduct(item)}
-                className="shadow-s-btn-icon mr-5 rounded-sm text-red-700 cursor-pointer"
-              />
-              <AiFillEdit className="text-green-700 shadow-s-btn-icon rounded-sm mr-2 cursor-pointer" />
-            </div>
+
+            {!isEdit(selectId, item.uid) && (
+              <div className="flex">
+                <RiDeleteBin7Fill
+                  onClick={() => handleDelete(item)}
+                  className="shadow-s-btn-icon mr-4 rounded-sm text-red-700 cursor-pointer"
+                />
+              </div>
+            )}
           </div>
         ))}
     </div>
   );
+};
+
+const isEdit = (selectId: any, itemId: any): boolean => {
+  return selectId === itemId;
 };
