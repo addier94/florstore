@@ -6,6 +6,7 @@ import {
   SET_DELETE_PRODUCT,
   SET_LIST_PRODUCTS,
   SET_SEARCH_PRODUCTS,
+  SET_UPDATE_PRODUCT,
 } from "../types/productsUserType";
 
 const initState: productFormat = {
@@ -46,6 +47,13 @@ const productsUserReducer = (
         ...state,
         productList: deleteProduct(state.productList, action.payload),
       };
+    case SET_UPDATE_PRODUCT:
+      return {
+        ...state,
+        productList: state.productList.map((item) =>
+          item.uid === action.payload.uid ? action.payload : item
+        ),
+      };
     default:
       return state;
   }
@@ -59,8 +67,8 @@ const orderByDate = (productList: IProducts[]): IProducts[] => {
 
 const itemNotRegistered = (name: string) => {
   return {
-    uid: "87",
-    name: `${name} aun no esta registrado`,
+    uid: "",
+    name: `${name}`,
     createdAt: 832948493955,
     userID: "02095938095485",
   };

@@ -7,15 +7,24 @@ import {
   IDeleteProductType,
   IGetAllProductType,
   IProducts,
+  IUpdateProductType,
   SET_DELETE_PRODUCT,
   SET_LIST_PRODUCTS,
+  SET_UPDATE_PRODUCT,
 } from "../types/productsUserType";
-import { addDoc, collection, deleteDoc, doc } from "@firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "@firebase/firestore";
 import { db } from "../../services/firebase-config";
 import { RooState } from "../../utils/TypeScript";
 import { validProduct } from "../../utils/Valid";
 import { getAllOwnProducts } from "../../helpers/getAllOwnProducts";
 import { slugify } from "../../helpers/Slugify";
+import { IAuth } from "../types/authType";
 
 export const startGetProducts =
   (userName: string, userID: string) =>
@@ -36,11 +45,14 @@ export const startCreateProduct =
     dispatch: Dispatch<IAlertType | ICreateProductType>,
     state: RooState
   ) => {
-    const userID = state().auth.uid || "";
-    const userName = state().auth.name || "";
+    const { url, userID } = getUrlAndIdOfUser(state().auth);
 
     // Validate if the format is correct and that name product does not exist in Firestore
-    const check = validProduct(userID, name, state().productsUser.productList);
+    const check = validProduct({
+      userID,
+      name,
+      products: state().productsUser.productList,
+    });
     if (check.errLength)
       return dispatch(loadingOrAlert("errors", check.errMsg));
 
@@ -49,10 +61,7 @@ export const startCreateProduct =
 
       const newProduct: IProducts = { userID, name, createdAt: Date.now() };
 
-      const { id } = await addDoc(
-        collection(db, `/${slugify(userName)}/product/${userID}`),
-        newProduct
-      );
+      const { id } = await addDoc(collection(db, url), newProduct);
 
       newProduct["uid"] = id;
       dispatch(addProduct(newProduct));
@@ -71,10 +80,7 @@ export const startDelitingProduct =
     dispatch: Dispatch<IAlertType | IDeleteProductType>,
     state: RooState
   ) => {
-    const userId = state().auth.uid || "";
-    const userName = state().auth.name || "";
-
-    const url = `${slugify(userName)}/product/${userId}/${product.uid}`;
+    const url = getUrl(state().auth, product);
 
     try {
       dispatch(loadingOrAlert("loading", true));
@@ -91,7 +97,54 @@ export const startDelitingProduct =
     }
   };
 
+export const startUpdateProduct =
+  (product: IProducts) =>
+  async (
+    dispatch: Dispatch<IAlertType | IUpdateProductType>,
+    state: RooState
+  ) => {
+    const url = getUrl(state().auth, product);
+
+    const check = validProduct({
+      userID: `${state().auth.uid}`,
+      name: product.name,
+      products: state().productsUser.productList,
+    });
+    if (check.errLength)
+      return dispatch(loadingOrAlert("errors", check.errMsg));
+    try {
+      dispatch(loadingOrAlert("loading", true));
+
+      const newProduct = { ...product };
+      delete newProduct.uid;
+
+      const productRef = doc(db, url);
+      await updateDoc(productRef, newProduct);
+
+      dispatch({ type: SET_UPDATE_PRODUCT, payload: product });
+
+      dispatch(loadingOrAlert("success", `${product.name} Actualizado`));
+      dispatch(loadingOrAlert("loading", false));
+    } catch (error) {
+      dispatch(loadingOrAlert("errors", `Error al actualizar ${product.name}`));
+    }
+  };
+
 export const addProduct = (product: IProducts): ICreateProductType => ({
   type: ADD_PRODUCT,
   payload: product,
 });
+
+const getUrl = (auth: IAuth, item: IProducts): string => {
+  const userID: string = auth.uid || "";
+  const userName: string = slugify(auth.name || "");
+
+  return `${userName}/product/${userID}/${item.uid}`;
+};
+
+const getUrlAndIdOfUser = (auth: IAuth): { url: string; userID: string } => {
+  const userID: string = auth.uid || "";
+  const userName: string = slugify(auth.name || "");
+
+  return { url: `${userName}/product/ ${userID}`, userID };
+};

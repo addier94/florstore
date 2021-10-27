@@ -17,7 +17,7 @@ export const getAllOwnProducts = async (
   const products: IGetAllProduct = [];
 
   productsSnap.docs.map((product) => {
-    products.push({
+    return products.push({
       uid: product.id,
       ...product.data(),
     });

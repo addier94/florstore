@@ -42,11 +42,15 @@ export function validateEmail(email: string) {
 }
 
 // Product Validation
-export const validProduct = (
-  userID: string,
-  name: string,
-  products: IGetAllProduct
-) => {
+export const validProduct = ({
+  userID,
+  name,
+  products,
+}: {
+  userID: string;
+  name: string;
+  products: IProducts[];
+}) => {
   const errors: string[] = [];
 
   if (!name) {
@@ -62,11 +66,13 @@ export const validProduct = (
     errors.push("Error interno (no se pudo obtener userID)");
   }
 
-  const exist: IProducts | undefined = products.find(
-    (item) => slugify(item.name) === slugify(name)
-  );
+  const exist = products.find((item) => slugify(item.name) === slugify(name));
   if (exist) {
-    errors.push(`${name.toUpperCase().strike()} ya tienes registrado`);
+    errors.push(
+      `${name
+        .toUpperCase()
+        .strike()} No puede Crear o Actualizar algo que ya existe`
+    );
   }
 
   return { errMsg: errors, errLength: errors.length };
