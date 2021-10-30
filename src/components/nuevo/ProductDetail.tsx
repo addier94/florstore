@@ -4,6 +4,7 @@ import { GrCodeSandbox } from "react-icons/gr";
 import { GiCash } from "react-icons/gi";
 import { useDispatch } from "react-redux";
 import { handleModal } from "../../redux/actions/uiModalAction";
+import ProductSelected from "./ProductSelected";
 
 export const ProductDetail = () => {
   const dispach = useDispatch();
@@ -14,11 +15,12 @@ export const ProductDetail = () => {
           onClick={() => dispach(handleModal(true))}
           className="h-10 w-full p-0 mb-2 shadow-s-btn rounded-xl cursor-pointer"
         />
-        <input
+        {/* <input
           type="text"
           placeholder="Seleccionar"
           className="w-full px-2 outline-none bg-transparent"
-        />
+        /> */}
+        <ProductSelected />
       </div>
       <div className="mx-2 w-16 pt-2 pb-6 shadow-s-main rounded-lg relative overflow-hidden">
         <label htmlFor="box">

@@ -35,7 +35,7 @@ export const ListProducts = () => {
     <div className="w-full h-72 overflow-y-scroll">
       {products &&
         products(state).map((item: IProducts, index) => (
-          <div>
+          <div key={item.uid}>
             {item.uid?.length === 0 ? (
               <div className="flex items-center justify-center h-72">
                 <div className="text-center">
@@ -47,7 +47,7 @@ export const ListProducts = () => {
                 </div>
               </div>
             ) : (
-              <div key={item.uid} className="flex justify-between mb-2">
+              <div className="flex justify-between mb-2">
                 <div className="flex items-center">
                   <span className="bg-s-primary text-white px-1 rounded-md mr-1">
                     {descIndex(index)}
@@ -64,9 +64,6 @@ export const ListProducts = () => {
                   {isEdit(selectId, item.uid) && (
                     <UpdateProduct product={item} setSelectId={setSelectId} />
                   )}
-                  {/* <Moment className="text-gray-400 ml-2" fromNow>
-                {item.createdAt}
-              </Moment> */}
                 </div>
 
                 {!isEdit(selectId, item.uid) && (
