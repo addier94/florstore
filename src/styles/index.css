@@ -30,3 +30,4 @@ input[type=number] {
 
 /* ---------------- Loading Page-------------------- */
 @import url('../components/alert/Loading.css');
+@import url('../components/nuevo//productSelected.css');

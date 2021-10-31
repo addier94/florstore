@@ -19,8 +19,9 @@ const ProductSelected = () => {
   };
 
   return (
-    <div>
+    <div className="productSelected">
       <Select
+        className="w-44 shadow-s-btn"
         value={selectedOption}
         onChange={handleChange}
         options={products}

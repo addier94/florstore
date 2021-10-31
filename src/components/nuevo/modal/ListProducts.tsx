@@ -10,7 +10,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { GoAlert } from "react-icons/go";
 import { startDelitingProduct } from "../../../redux/actions/productsUserAction";
 import { UpdateProduct } from "./UpdateProduct";
-import { useState } from "react";
+import { FC, useState } from "react";
 
 export const ListProducts = () => {
   const dispatch = useDispatch();
@@ -37,15 +37,7 @@ export const ListProducts = () => {
         products(state).map((item: IProducts, index) => (
           <div key={item.uid}>
             {item.uid?.length === 0 ? (
-              <div className="flex items-center justify-center h-72">
-                <div className="text-center">
-                  <p className="text-green-700 text-xl">¿{item.name}?</p>
-                  <p className="text-2xl">está disponible</p>
-                  <div className="shadow-s-input-hover inline-block p-3 mt-2 rounded-lg">
-                    <GoAlert className="w-12 h-12 text-red-700" />
-                  </div>
-                </div>
-              </div>
+              <NewProduct name={item.name} />
             ) : (
               <div className="flex justify-between mb-2">
                 <div className="flex items-center">
@@ -78,6 +70,20 @@ export const ListProducts = () => {
             )}
           </div>
         ))}
+    </div>
+  );
+};
+
+const NewProduct: FC<{ name: string }> = ({ name }) => {
+  return (
+    <div className="flex items-center justify-center h-72">
+      <div className="text-center">
+        <p className="text-green-700 text-xl">¿{name}?</p>
+        <p className="text-2xl">está disponible</p>
+        <div className="shadow-s-input-hover inline-block p-3 mt-2 rounded-lg">
+          <GoAlert className="w-12 h-12 text-red-700" />
+        </div>
+      </div>
     </div>
   );
 };

@@ -13,24 +13,16 @@ export const ProductDetail = () => {
       <div className="mx-2 w-24">
         <VscAdd
           onClick={() => dispach(handleModal(true))}
-          className="h-10 w-full p-0 mb-2 shadow-s-btn rounded-xl cursor-pointer"
+          className="h-7 w-full p-0 mb-2 shadow-s-btn rounded-xl cursor-pointer"
         />
-        {/* <input
-          type="text"
-          placeholder="Seleccionar"
-          className="w-full px-2 outline-none bg-transparent"
-        /> */}
         <ProductSelected />
       </div>
-      <div className="mx-2 w-16 pt-2 pb-6 shadow-s-main rounded-lg relative overflow-hidden">
-        <label htmlFor="box">
-          <BsBox className="h-10 w-10 p-1 shadow-s-input2 rounded-md mx-auto" />
-        </label>
+      <div className="mx-2 w-16 h-7 shadow-s-btn rounded-lg relative overflow-hidden">
         <input
           type="number"
           placeholder="0"
           id="box"
-          className="w-16 outline-none border-none text-s-primary font-semibold bg-transparent absolute left-0 bottom-0 px-3"
+          className="w-full text-center px-2 outline-none border-none text-s-primary font-semibold bg-transparent "
         />
       </div>
       <div className="mx-2 w-16 pt-2 pb-6 shadow-s-main rounded-lg relative overflow-hidden">
