@@ -79,3 +79,9 @@ export interface IUserRegister extends IUserLogin {
 export interface IModal {
   show: boolean;
 }
+
+export interface IPDCalculate {
+  box: string;
+  qty: string;
+  itemPrice: string;
+}
