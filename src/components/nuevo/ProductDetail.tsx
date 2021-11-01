@@ -10,8 +10,10 @@ import { useEffect, useState } from "react";
 import { loadingOrAlert } from "../../helpers/Alert";
 
 const calculateSubtotal = (qty: string, itemPrice: string) => {
-  const res = (parseFloat(qty) * parseFloat(itemPrice)).toString();
-  return res;
+  return (parseFloat(qty) * parseFloat(itemPrice)).toString();
+};
+const calculateTotal = (box: string, subTotal: string) => {
+  return (parseFloat(subTotal) - parseFloat(box)).toString();
 };
 type PDValidate = {
   valid: boolean;
@@ -20,17 +22,16 @@ type PDValidate = {
 const sanitize = (box: string, qty: string, itemPrice: string): PDValidate => {
   const rege = /^\d*\.?\d*$/;
   let result = { valid: false, bad: "" };
-  console.log("box", box);
   // true when is match (rege.test(box))
-  if (!rege.test(box)) {
+  if (!rege.test(box.trim())) {
     result["bad"] = box.strike();
     result["valid"] = false;
     return result;
-  } else if (!rege.test(qty)) {
+  } else if (!rege.test(qty.trim())) {
     result["bad"] = qty.strike();
     result["valid"] = false;
     return result;
-  } else if (!rege.test(qty)) {
+  } else if (!rege.test(itemPrice.trim())) {
     result["bad"] = itemPrice.strike();
     result["valid"] = false;
     return result;
@@ -38,8 +39,6 @@ const sanitize = (box: string, qty: string, itemPrice: string): PDValidate => {
     result["valid"] = true;
     return result;
   }
-
-  // const result = rege.test(box) && rege.test(qty) && rege.test(itemPrice
 };
 
 type IPDetail = {
@@ -63,31 +62,25 @@ type IPDetailCalculated = {
 
 export const ProductDetail = () => {
   const dispatch = useDispatch();
-  // const { box, qty, itemPrice, handleInputChange, values } = useForm(initState);
-  const [pDetail, setPDetail] = useState(initState);
-  const { box, qty, itemPrice } = pDetail;
-
-  const handleInputChange = ({ target }: InputChange) => {
-    setPDetail({
-      ...pDetail,
-      [target.name]: target.value,
-    });
-  };
+  const { box, qty, itemPrice, handleInputChange, values } = useForm(initState);
 
   useEffect(() => {
     const { valid, bad } = sanitize(box, qty, itemPrice);
-    // console.log({ valid, bad });
-    if (valid) {
-      const subTotal = calculateSubtotal(qty, itemPrice);
-    } else {
-      // console.log("invalid");
+    if (!valid) {
       dispatch(loadingOrAlert("errors", `${bad} inválido`));
+    } else {
+      if (box && qty && itemPrice) {
+        const subTotal = calculateSubtotal(qty, itemPrice);
+        const total = calculateTotal(box, subTotal);
+        console.log("subTotal:", subTotal);
+        console.log("total:", total);
+      }
     }
   }, [box, qty, itemPrice, dispatch]);
 
   const handleSubmit = (e: FormSubmit) => {
     e.preventDefault();
-    console.log("onSubmit", pDetail);
+    console.log("onSubmit", values);
   };
 
   return (
@@ -101,12 +94,11 @@ export const ProductDetail = () => {
       </div>
       <div className="mx-2 w-16 h-7 shadow-s-btn rounded-lg relative overflow-hidden">
         <input
-          className="w-full text-center px-2 outline-none border-none text-s-primary font-semibold bg-transparent "
+          className="w-full text-center px-2 outline-none border-none text-s-primary font-semibold bg-transparent"
           type="text"
-          id="box"
           placeholder="0"
           name="box"
-          value={box}
+          value={values.box}
           onChange={handleInputChange}
         />
       </div>
@@ -116,7 +108,7 @@ export const ProductDetail = () => {
         </label>
         <input
           className="w-16 outline-none border-none text-s-primary font-semibold bg-transparent absolute left-0 bottom-0 px-3"
-          type="number"
+          type="text"
           id="qty"
           placeholder="0"
           name="qty"
@@ -130,7 +122,7 @@ export const ProductDetail = () => {
         </label>
         <input
           className="w-16 outline-none border-none text-s-primary font-semibold bg-transparent absolute left-0 bottom-0 px-3"
-          type="number"
+          type="text"
           id="itemPrice"
           placeholder="0"
           name="itemPrice"
