@@ -21,7 +21,7 @@ export const AppRouter = () => {
 
     onAuthStateChanged(auth, async (user) => {
       if (user?.uid) {
-        dispatch(login(user.uid, user.displayName, user.email));
+        dispatch(login(user.uid, user.displayName, user.email, user.photoURL));
         setIsLoggedIn(true);
         dispatch(startGetProducts(user.displayName || "/user", user.uid));
       } else {

@@ -33,10 +33,14 @@ export const startRegisterWithEmailPasswordName =
         userRegister.password
       );
       dispatch(loadingOrAlert("success", `Hola ${userRegister.name}`));
-      await updateProfile(user, { displayName: userRegister.name });
+      const tax: string = "10";
+      await updateProfile(user, {
+        displayName: userRegister.name,
+        photoURL: tax,
+      });
 
       const { uid, displayName: name, email } = user;
-      dispatch(login(uid, name, email));
+      dispatch(login(uid, name, email, tax));
 
       dispatch(loadingOrAlert("loading", false));
     } catch (error: any) {
@@ -66,14 +70,14 @@ export const startLogin =
       const auth = getAuth();
       dispatch(loadingOrAlert("loading", true));
 
-      const { user: userAuth } = await signInWithEmailAndPassword(
+      const { user: AuthUser } = await signInWithEmailAndPassword(
         auth,
         userLogin.email,
         userLogin.password
       );
 
-      const { uid, displayName: name, email } = userAuth;
-      dispatch(login(uid, name, email));
+      const { uid, displayName: name, email, photoURL: tax } = AuthUser;
+      dispatch(login(uid, name, email, tax));
 
       dispatch(loadingOrAlert("loading", false));
       dispatch(loadingOrAlert("success", `Hola ${name}`));
@@ -89,7 +93,11 @@ export const startGoogleLogin =
       dispatch(loadingOrAlert("loading", true));
       const { user } = await signInWithPopup(auth, new GoogleAuthProvider());
       const { uid, displayName: name, email } = user;
-      dispatch(login(uid, name, email));
+
+      const tax: string = "10";
+      await updateProfile(user, { photoURL: tax });
+
+      dispatch(login(uid, name, email, tax));
 
       dispatch(loadingOrAlert("loading", false));
       dispatch(loadingOrAlert("success", `Hola ${name}`));
@@ -101,8 +109,14 @@ export const startGoogleLogin =
 type uid = string | null;
 type name = string | null;
 type email = string | null;
+type tax = string | null;
 
-export const login = (uid: uid, name: name, email: email): IAuthType => ({
+export const login = (
+  uid: uid,
+  name: name,
+  email: email,
+  tax?: tax
+): IAuthType => ({
   type: AUTH,
-  payload: { uid, name, email },
+  payload: { uid, name, email, tax },
 });
