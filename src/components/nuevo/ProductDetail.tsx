@@ -1,51 +1,20 @@
 import { VscAdd } from "react-icons/vsc";
 import { GrCodeSandbox } from "react-icons/gr";
 import { GiCash } from "react-icons/gi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { handleModal } from "../../redux/actions/uiModalAction";
 import ProductSelected from "./ProductSelected";
 import { useForm } from "../../hooks/useForm";
-import { FormSubmit, InputChange, IPDCalculate } from "../../utils/TypeScript";
-import { useEffect, useState } from "react";
+import { FormSubmit, RootStore } from "../../utils/TypeScript";
+import { useCallback, useEffect, useState } from "react";
 import { loadingOrAlert } from "../../helpers/Alert";
+import { calcTotal, sanitize } from "./productDetail";
 
-const calculateSubtotal = (qty: string, itemPrice: string) => {
-  return (parseFloat(qty) * parseFloat(itemPrice)).toString();
-};
-const calculateTotal = (box: string, subTotal: string) => {
-  return (parseFloat(subTotal) - parseFloat(box)).toString();
-};
-type PDValidate = {
-  valid: boolean;
-  bad: string;
-};
-const sanitize = (box: string, qty: string, itemPrice: string): PDValidate => {
-  const rege = /^\d*\.?\d*$/;
-  let result = { valid: false, bad: "" };
-  // true when is match (rege.test(box))
-  if (!rege.test(box.trim())) {
-    result["bad"] = box.strike();
-    result["valid"] = false;
-    return result;
-  } else if (!rege.test(qty.trim())) {
-    result["bad"] = qty.strike();
-    result["valid"] = false;
-    return result;
-  } else if (!rege.test(itemPrice.trim())) {
-    result["bad"] = itemPrice.strike();
-    result["valid"] = false;
-    return result;
-  } else {
-    result["valid"] = true;
-    return result;
-  }
-};
-
-type IPDetail = {
+interface IPDetail {
   box: string;
   qty: string;
   itemPrice: string;
-};
+}
 
 const initState: IPDetail = {
   box: "",
@@ -53,16 +22,15 @@ const initState: IPDetail = {
   itemPrice: "",
 };
 
-type IPDetailCalculated = {
-  productID: "";
-  subtotal: "";
-  total: "";
-  totalLessIva: "";
-};
-
 export const ProductDetail = () => {
   const dispatch = useDispatch();
+
+  const [variation, setVariation] = useState({ total: "", productID: "" });
   const { box, qty, itemPrice, handleInputChange, values } = useForm(initState);
+
+  const addTotal = useCallback((val: string) => {
+    setVariation({ ...variation, total: val });
+  }, []);
 
   useEffect(() => {
     const { valid, bad } = sanitize(box, qty, itemPrice);
@@ -70,17 +38,23 @@ export const ProductDetail = () => {
       dispatch(loadingOrAlert("errors", `${bad} inválido`));
     } else {
       if (box && qty && itemPrice) {
-        const subTotal = calculateSubtotal(qty, itemPrice);
-        const total = calculateTotal(box, subTotal);
-        console.log("subTotal:", subTotal);
-        console.log("total:", total);
+        const total = calcTotal(box, qty, itemPrice);
+        addTotal(total);
       }
     }
-  }, [box, qty, itemPrice, dispatch]);
+  }, [box, qty, itemPrice, dispatch, addTotal]);
 
   const handleSubmit = (e: FormSubmit) => {
     e.preventDefault();
-    console.log("onSubmit", values);
+    const { valid } = sanitize(box, qty, itemPrice);
+    if (!valid || !variation.total) {
+      dispatch(
+        loadingOrAlert("errors", `No es posible hacer cáculos aritmeticos`)
+      );
+    } else {
+      const newProductDetail = { ...values, ...variation };
+      console.log(newProductDetail);
+    }
   };
 
   return (
@@ -90,7 +64,7 @@ export const ProductDetail = () => {
           onClick={() => dispatch(handleModal(true))}
           className="h-7 w-full p-0 mb-2 shadow-s-btn rounded-xl cursor-pointer"
         />
-        <ProductSelected />
+        <ProductSelected variation={variation} setVariation={setVariation} />
       </div>
       <div className="mx-2 w-16 h-7 shadow-s-btn rounded-lg relative overflow-hidden">
         <input
@@ -134,9 +108,7 @@ export const ProductDetail = () => {
         type="submit"
         className="mx-2 w-16 pt-2 pb-2 shadow-s-main rounded-lg relative overflow-hidden bg-s-primary flex items-center justify-center flex-col leading-5 text-white font-bold"
       >
-        <p className="text-red-700">28394</p>
-        <p className="text-yellow-200">28394</p>
-        <p className="text-green-900">8393</p>
+        <p className="text-white">{variation.total}</p>
       </button>
     </form>
   );

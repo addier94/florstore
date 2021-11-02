@@ -1,9 +1,22 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import { RootStore } from "../../utils/TypeScript";
 
-const ProductSelected = () => {
+interface IVariation {
+  setVariation: React.Dispatch<
+    React.SetStateAction<{
+      total: string;
+      productID: string;
+    }>
+  >;
+  variation: {
+    total: string;
+    productID: string;
+  };
+}
+
+const ProductSelected: FC<IVariation> = ({ variation, setVariation }) => {
   const products = useSelector((state: RootStore) =>
     state.productsUser.productList.map((item) => {
       return { value: item.uid || "", label: item.name };
@@ -16,6 +29,7 @@ const ProductSelected = () => {
 
   const handleChange = (selecedOption: any) => {
     setSelectedOption(selecedOption);
+    setVariation({ ...variation, productID: selecedOption.value });
   };
 
   return (
