@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Select from "react-select";
 import { RootStore } from "../../utils/TypeScript";
@@ -16,15 +16,22 @@ interface IVariation {
   };
 }
 
+const initState = [{ value: "null", label: "Seleccionar" }];
+
 const ProductSelected: FC<IVariation> = ({ variation, setVariation }) => {
   const products = useSelector((state: RootStore) =>
     state.productsUser.productList.map((item) => {
       return { value: item.uid || "", label: item.name };
     })
   );
-  const [selectedOption, setSelectedOption] = useState([
-    { value: "null", label: "Select" },
-  ]);
+
+  const [selectedOption, setSelectedOption] = useState(initState);
+
+  useEffect(() => {
+    if (!variation.productID) {
+      setSelectedOption(initState);
+    }
+  }, [variation.productID]);
 
   const handleChange = (selecedOption: any) => {
     setSelectedOption(selecedOption);

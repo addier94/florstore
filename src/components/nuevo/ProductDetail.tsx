@@ -5,24 +5,22 @@ import { useDispatch } from "react-redux";
 import { handleModal } from "../../redux/actions/uiModalAction";
 import ProductSelected from "./ProductSelected";
 import { useForm } from "../../hooks/useForm";
-import { FormSubmit, IPDCalculate } from "../../utils/TypeScript";
+import { FormSubmit } from "../../utils/TypeScript";
 import { useEffect, useState } from "react";
 import { loadingOrAlert } from "../../helpers/Alert";
-import { calcTotal, sanitize } from "./productDetail";
+import { calcTotal, sanitize } from "./productDetail.helpers";
+import { startCreateProductDetail } from "../../redux/actions/productDetailAction";
 
-const initState: IPDCalculate = {
-  box: "",
-  qty: "",
-  itemPrice: "",
-};
+const initState = { box: "", qty: "", itemPrice: "" };
+const initStateVariation = { total: "", productID: "" };
 
 export const ProductDetail = () => {
   const dispatch = useDispatch();
 
-  // console.log("totalRef", totalRef);
   const [validObj, setValidObj] = useState(false);
-  const [variation, setVariation] = useState({ total: "", productID: "" });
-  const { box, qty, itemPrice, handleInputChange, values } = useForm(initState);
+  const [variation, setVariation] = useState(initStateVariation);
+  const { box, qty, itemPrice, handleInputChange, values, reset } =
+    useForm(initState);
 
   useEffect(() => {
     const { valid, bad } = sanitize(box, qty, itemPrice);
@@ -44,6 +42,9 @@ export const ProductDetail = () => {
     e.preventDefault();
     if (validObj && variation.productID) {
       const newProductDetail = { ...values, ...variation };
+      dispatch(startCreateProductDetail(newProductDetail));
+      reset();
+      setVariation(initStateVariation);
     } else {
       dispatch(loadingOrAlert("errors", "Revisa tus registros"));
     }
