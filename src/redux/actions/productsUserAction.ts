@@ -146,5 +146,5 @@ const getUrlAndIdOfUser = (auth: IAuth): { url: string; userID: string } => {
   const userID: string = auth.uid || "";
   const userName: string = slugify(auth.name || "");
 
-  return { url: `${userName}/product/ ${userID}`, userID };
+  return { url: `${userName}/product/${userID}`, userID };
 };

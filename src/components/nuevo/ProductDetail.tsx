@@ -1,22 +1,16 @@
 import { VscAdd } from "react-icons/vsc";
 import { GrCodeSandbox } from "react-icons/gr";
 import { GiCash } from "react-icons/gi";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { handleModal } from "../../redux/actions/uiModalAction";
 import ProductSelected from "./ProductSelected";
 import { useForm } from "../../hooks/useForm";
-import { FormSubmit, RootStore } from "../../utils/TypeScript";
-import { useCallback, useEffect, useState } from "react";
+import { FormSubmit, IPDCalculate } from "../../utils/TypeScript";
+import { useEffect, useState } from "react";
 import { loadingOrAlert } from "../../helpers/Alert";
 import { calcTotal, sanitize } from "./productDetail";
 
-interface IPDetail {
-  box: string;
-  qty: string;
-  itemPrice: string;
-}
-
-const initState: IPDetail = {
+const initState: IPDCalculate = {
   box: "",
   qty: "",
   itemPrice: "",
@@ -25,35 +19,33 @@ const initState: IPDetail = {
 export const ProductDetail = () => {
   const dispatch = useDispatch();
 
+  // console.log("totalRef", totalRef);
+  const [validObj, setValidObj] = useState(false);
   const [variation, setVariation] = useState({ total: "", productID: "" });
   const { box, qty, itemPrice, handleInputChange, values } = useForm(initState);
-
-  const addTotal = useCallback((val: string) => {
-    setVariation({ ...variation, total: val });
-  }, []);
 
   useEffect(() => {
     const { valid, bad } = sanitize(box, qty, itemPrice);
     if (!valid) {
       dispatch(loadingOrAlert("errors", `${bad} inválido`));
+      setValidObj(false);
     } else {
       if (box && qty && itemPrice) {
+        setValidObj(true);
         const total = calcTotal(box, qty, itemPrice);
-        addTotal(total);
+        setVariation((v) => ({ ...v, total }));
+      } else {
+        setValidObj(false);
       }
     }
-  }, [box, qty, itemPrice, dispatch, addTotal]);
+  }, [box, qty, itemPrice, dispatch]);
 
   const handleSubmit = (e: FormSubmit) => {
     e.preventDefault();
-    const { valid } = sanitize(box, qty, itemPrice);
-    if (!valid || !variation.total) {
-      dispatch(
-        loadingOrAlert("errors", `No es posible hacer cáculos aritmeticos`)
-      );
-    } else {
+    if (validObj && variation.productID) {
       const newProductDetail = { ...values, ...variation };
-      console.log(newProductDetail);
+    } else {
+      dispatch(loadingOrAlert("errors", "Revisa tus registros"));
     }
   };
 
@@ -68,7 +60,7 @@ export const ProductDetail = () => {
       </div>
       <div className="mx-2 w-16 h-7 shadow-s-btn rounded-lg relative overflow-hidden">
         <input
-          className="w-full text-center px-2 outline-none border-none text-s-primary font-semibold bg-transparent"
+          className="w-full text-center px-2 outline-none border-none text-black font-semibold bg-transparent"
           type="text"
           placeholder="0"
           name="box"
@@ -81,7 +73,7 @@ export const ProductDetail = () => {
           <GrCodeSandbox className="h-10 w-10 p-1 shadow-s-input2 rounded-md mx-auto" />
         </label>
         <input
-          className="w-16 outline-none border-none text-s-primary font-semibold bg-transparent absolute left-0 bottom-0 px-3"
+          className="w-16 outline-none border-none text-black font-semibold bg-transparent absolute left-0 bottom-0 px-3"
           type="text"
           id="qty"
           placeholder="0"
@@ -95,7 +87,7 @@ export const ProductDetail = () => {
           <GiCash className="h-10 w-10 p-1 shadow-s-input2 rounded-md mx-auto" />
         </label>
         <input
-          className="w-16 outline-none border-none text-s-primary font-semibold bg-transparent absolute left-0 bottom-0 px-3"
+          className="w-16 outline-none border-none text-black font-semibold bg-transparent absolute left-0 bottom-0 px-3"
           type="text"
           id="itemPrice"
           placeholder="0"

@@ -85,3 +85,7 @@ export interface IPDCalculate {
   qty: string;
   itemPrice: string;
 }
+export interface IPDAllFields extends IPDCalculate {
+  productID: string;
+  total: string;
+}

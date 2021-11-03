@@ -1,5 +1,5 @@
 import { slugify } from "../helpers/Slugify";
-import { IGetAllProduct, IProducts } from "../redux/types/productsUserType";
+import { IProducts } from "../redux/types/productsUserType";
 import { IUserRegister } from "./TypeScript";
 
 export const validRegister = (userRegister: IUserRegister) => {

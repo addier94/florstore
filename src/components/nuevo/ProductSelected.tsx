@@ -22,7 +22,6 @@ const ProductSelected: FC<IVariation> = ({ variation, setVariation }) => {
       return { value: item.uid || "", label: item.name };
     })
   );
-
   const [selectedOption, setSelectedOption] = useState([
     { value: "null", label: "Select" },
   ]);
@@ -43,4 +42,4 @@ const ProductSelected: FC<IVariation> = ({ variation, setVariation }) => {
     </div>
   );
 };
-export default ProductSelected;
+export default React.memo(ProductSelected);
