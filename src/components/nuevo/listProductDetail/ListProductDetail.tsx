@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { GiCash } from "react-icons/gi";
 import { GrCodeSandbox } from "react-icons/gr";
 import { IPDAllFields } from "../../../redux/types/productDetailType";
@@ -10,14 +10,14 @@ type IPDetail = {
   productName: string;
 };
 
-export const ListProductDetail: FC<IPDetail> = ({
+const ListProductDetail: FC<IPDetail> = ({
   pDetail,
   index,
   longItem,
   productName,
 }) => {
   return (
-    <div className="flex justify-center mt-2">
+    <div className="flex justify-center py-1">
       <div className="mx-2 w-24">
         <div className="flex  justify-between mb-2 text-xs text-gray-200">
           <button className="shadow-s-btn px-1 py-1 rounded-sm bg-green-800">
@@ -57,6 +57,8 @@ export const ListProductDetail: FC<IPDetail> = ({
     </div>
   );
 };
+
+export default React.memo(ListProductDetail);
 
 const indexDesc = (longItem: number, index: number) => {
   return longItem - index;

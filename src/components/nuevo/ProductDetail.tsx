@@ -3,7 +3,8 @@ import { IPDAllFields } from "../../redux/types/productDetailType";
 import { IProducts } from "../../redux/types/productsUserType";
 import { RootStore } from "../../utils/TypeScript";
 import { AddProductDetail } from "./addProductDetail/AddProductDetail";
-import { ListProductDetail } from "./listProductDetail/ListProductDetail";
+import { Calculate } from "./getCalculations/Calculate";
+import ListProductDetail from "./listProductDetail/ListProductDetail";
 
 export const ProductDetail = () => {
   const {
@@ -12,11 +13,12 @@ export const ProductDetail = () => {
   } = useSelector((state: RootStore) => state);
 
   return (
-    <div>
+    <>
+      <Calculate />
       <AddProductDetail />
       <div
         className=" overflow-y-scroll pl-2"
-        style={{ height: "calc(100vh - 234px)" }}
+        style={{ height: "calc(100vh - 262px)" }}
       >
         {allPDetail &&
           allPDetail.map((item, index) => (
@@ -29,7 +31,7 @@ export const ProductDetail = () => {
             />
           ))}
       </div>
-    </div>
+    </>
   );
 };
 
