@@ -9,7 +9,7 @@ export const AuthenticatedRoute = () => {
   return (
     <div>
       <Header />
-      <div className="mt-40">
+      <div className="mt-36">
         <Switch>
           <Route exact path="/detalles" component={Detalles} />
           <Route exact path="/" component={Home} />

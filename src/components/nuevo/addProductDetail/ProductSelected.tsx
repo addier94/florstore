@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Select from "react-select";
-import { RootStore } from "../../utils/TypeScript";
+import { RootStore } from "../../../utils/TypeScript";
 
 interface IVariation {
   setVariation: React.Dispatch<
