@@ -7,12 +7,14 @@ type IPDetail = {
   pDetail: IPDAllFields;
   index: number;
   longItem: number;
+  productName: string;
 };
 
 export const ListProductDetail: FC<IPDetail> = ({
   pDetail,
   index,
   longItem,
+  productName,
 }) => {
   return (
     <div className="flex justify-center mt-2">
@@ -29,7 +31,7 @@ export const ListProductDetail: FC<IPDetail> = ({
           <span className="bg-gray-900 mr-1 shadow-s-btn text-white rounded-md px-1">
             {indexDesc(longItem, index)}
           </span>
-          mabel
+          {productName}
         </div>
       </div>
       <div className="mx-2 w-16 h-7 shadow-s-btn rounded-lg relative overflow-hidden">
