@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { GiCash } from "react-icons/gi";
 import { GrCodeSandbox } from "react-icons/gr";
+import { useDispatch } from "react-redux";
+import { startDeletePDetail } from "../../../redux/actions/productDetailAction";
 import { IPDAllFields } from "../../../redux/types/productDetailType";
 
 type IPDetail = {
@@ -16,6 +18,8 @@ const ListProductDetail: FC<IPDetail> = ({
   longItem,
   productName,
 }) => {
+  const dispatch = useDispatch();
+
   return (
     <div className="flex justify-center py-1">
       <div className="mx-2 w-24">
@@ -23,7 +27,10 @@ const ListProductDetail: FC<IPDetail> = ({
           <button className="shadow-s-btn px-1 py-1 rounded-sm bg-green-800">
             Editar
           </button>
-          <button className="shadow-s-btn px-1 py-1 rounded-sm bg-red-700">
+          <button
+            className="shadow-s-btn px-1 py-1 rounded-sm bg-red-700"
+            onClick={() => dispatch(startDeletePDetail(pDetail))}
+          >
             Borrar
           </button>
         </div>

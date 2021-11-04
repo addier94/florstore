@@ -1,4 +1,5 @@
 import {
+  DELETE_PD,
   GET_PDETAIL,
   IPDetailState,
   IProductDetailType,
@@ -24,6 +25,11 @@ const productDetailReducer = (
       return {
         ...state,
         data: action.payload.sort((a, b) => b.createdAt - a.createdAt),
+      };
+    case DELETE_PD:
+      return {
+        ...state,
+        data: state.data.filter((item) => item.uid !== action.payload.uid),
       };
 
     default:
