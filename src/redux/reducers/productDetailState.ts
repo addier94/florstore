@@ -1,4 +1,5 @@
 import {
+  GET_PDETAIL,
   IPDetailState,
   IProductDetailType,
   SET_PRODUCT_DETAIL,
@@ -17,6 +18,12 @@ const productDetailReducer = (
       return {
         ...state,
         data: [action.payload, ...state.data],
+      };
+
+    case GET_PDETAIL:
+      return {
+        ...state,
+        data: action.payload.sort((a, b) => b.createdAt - a.createdAt),
       };
 
     default:

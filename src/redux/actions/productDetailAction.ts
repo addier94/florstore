@@ -1,13 +1,16 @@
 import { addDoc, collection } from "@firebase/firestore";
 import { Dispatch } from "react";
 import { loadingOrAlert } from "../../helpers/Alert";
+import { getAllPDetail } from "../../helpers/getAllPDetail";
 import { slugify } from "../../helpers/Slugify";
 import { db } from "../../services/firebase-config";
 import { IPDetail, RooState } from "../../utils/TypeScript";
 import { IAlertType } from "../types/alertType";
 import { IAuth } from "../types/authType";
 import {
+  GET_PDETAIL,
   ICreateProductDetailType,
+  IGetPDetailType,
   IPDAllFields,
   SET_PRODUCT_DETAIL,
 } from "../types/productDetailType";
@@ -35,6 +38,24 @@ export const startCreateProductDetail =
       dispatch(loadingOrAlert("loading", false));
     } catch (error) {
       dispatch(loadingOrAlert("errors", "Error registro no creado"));
+    }
+  };
+
+export const startGetPDetail =
+  () =>
+  async (dispatch: Dispatch<IAlertType | IGetPDetailType>, state: RooState) => {
+    try {
+      const pDetail = await getAllPDetail(
+        slugify(state().auth.name || ""),
+        state().auth.uid || ""
+      );
+      dispatch(loadingOrAlert("loading", true));
+
+      dispatch({ type: GET_PDETAIL, payload: pDetail });
+
+      dispatch(loadingOrAlert("loading", false));
+    } catch (error) {
+      dispatch(loadingOrAlert("errors", "Error al obtener registros"));
     }
   };
 

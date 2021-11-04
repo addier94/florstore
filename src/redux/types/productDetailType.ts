@@ -1,6 +1,7 @@
 import { IPDetail } from "../../utils/TypeScript";
 
 export const SET_PRODUCT_DETAIL = "SET_PRODUCT_DETAIL";
+export const GET_PDETAIL = "GET_PDETAIL";
 
 export interface IPDetailState {
   data: IPDAllFields[];
@@ -17,4 +18,9 @@ export interface ICreateProductDetailType {
   payload: IPDAllFields;
 }
 
-export type IProductDetailType = ICreateProductDetailType;
+export interface IGetPDetailType {
+  type: typeof GET_PDETAIL;
+  payload: IPDAllFields[];
+}
+
+export type IProductDetailType = ICreateProductDetailType | IGetPDetailType;
